@@ -297,3 +297,74 @@ window.quickpanel-backdrop,
 .bt-row {
     min-width: 0;
 }
+.audio-section,
+.mode-section {
+    padding: 12px;
+    border-radius: 16px;
+    background: rgba(8, 10, 18, 0.46);
+}
+
+.audio-list {
+    background: transparent;
+}
+
+.audio-row {
+    padding: 10px;
+    border-radius: 14px;
+    background: rgba(54, 56, 70, 0.62);
+    color: #f5fbff;
+}
+
+.audio-empty {
+    color: #b8bac8;
+    padding: 6px;
+}
+
+.mode-current {
+    color: #39c5bb;
+    font-weight: bold;
+}
+
+.mode-grid {
+    background: transparent;
+}
+
+.mode-button {
+    padding: 12px 10px;
+    border-radius: 14px;
+    background: rgba(54, 56, 70, 0.62);
+    color: #f5fbff;
+    border: none;
+}
+
+.mode-button:hover {
+    background: rgba(57, 197, 187, 0.82);
+    color: #061622;
+}
+
+.mode-active {
+    background: rgba(57, 197, 187, 0.88);
+    color: #061622;
+}
+
+.expand-arrow-button {
+    min-width: 22px;
+    min-height: 22px;
+    padding: 0;
+    margin-left: 6px;
+    border: none;
+    border-radius: 8px;
+    background: transparent;
+    color: #f5fbff;
+}
+
+.expand-arrow-button:hover {
+    background: rgba(57, 197, 187, 0.18);
+    color: #39c5bb;
+}
+
+.expand-arrow-label {
+    font-size: 14px;
+    font-weight: bold;
+}
+

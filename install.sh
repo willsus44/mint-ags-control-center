@@ -47,6 +47,7 @@ install -m 644 "$BASE_DIR/ags/style.css" "$HOME/.config/ags/style.css"
 
 install -m 755 "$BASE_DIR/bin/ags-panel-control" "$HOME/.local/bin/ags-panel-control"
 install -m 755 "$BASE_DIR/bin/ags-panel-clickwatch" "$HOME/.local/bin/ags-panel-clickwatch"
+install -m 755 "$BASE_DIR/bin/ags-audio-apps" "$HOME/.local/bin/ags-audio-apps"
 
 cp -r "$BASE_DIR/cinnamon-applet/$APPLET_ID/"* "$HOME/.local/share/cinnamon/applets/$APPLET_ID/"
 

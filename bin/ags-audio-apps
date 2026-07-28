@@ -1,0 +1,68 @@
+#!/usr/bin/env bash
+
+LANG=C pactl list sink-inputs 2>/dev/null | awk '
+function clean_value(line) {
+    sub(/.*= "/, "", line)
+    sub(/"$/, "", line)
+    return line
+}
+
+function flush() {
+    if (id != "") {
+        if (name == "") {
+            if (media != "")
+                name = media
+            else if (binary != "")
+                name = binary
+            else
+                name = "Audio"
+        }
+
+        if (vol == "")
+            vol = 0
+
+        print id "|" name "|" vol
+    }
+}
+
+/^Sink Input #/ {
+    flush()
+
+    id = $3
+    gsub("#", "", id)
+
+    name = ""
+    media = ""
+    binary = ""
+    vol = ""
+
+    next
+}
+
+/application.name =/ {
+    name = clean_value($0)
+    next
+}
+
+/media.name =/ {
+    media = clean_value($0)
+    next
+}
+
+/application.process.binary =/ {
+    binary = clean_value($0)
+    next
+}
+
+/^[[:space:]]*Volume:/ {
+    if (match($0, /[0-9]+%/)) {
+        vol = substr($0, RSTART, RLENGTH)
+        gsub("%", "", vol)
+    }
+    next
+}
+
+END {
+    flush()
+}
+'

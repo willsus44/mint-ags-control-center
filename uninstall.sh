@@ -13,6 +13,7 @@ rm -f /tmp/ags-clickwatch.log
 
 rm -f "$HOME/.local/bin/ags-panel-control"
 rm -f "$HOME/.local/bin/ags-panel-clickwatch"
+rm -f "$HOME/.local/bin/ags-audio-apps"
 
 rm -rf "$HOME/.local/share/cinnamon/applets/$APPLET_ID"
 

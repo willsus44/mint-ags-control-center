@@ -45,8 +45,19 @@ const bluetoothDevices = Variable("", {
     poll: [10000, ["bash", "-lc", bluetoothListCommand]],
 });
 
+const audioListCommand = "$HOME/.local/bin/ags-audio-apps";
+
 const showWifiList = Variable(false);
 const showBluetoothList = Variable(false);
+
+const showAudioList = Variable(false);
+const showPowerModes = Variable(false);
+
+const audioApps = Variable("");
+
+const powerProfile = Variable("unknown", {
+    poll: [5000, ["bash", "-lc", "powerprofilesctl get 2>/dev/null || echo unsupported"], out => out.trim()],
+});
 
 const shrinkPanel = () => {
     const duration = 320;
@@ -72,6 +83,48 @@ const shrinkPanel = () => {
 const closeQuickPanel = () => {
     App.closeWindow("quickpanel");
     App.closeWindow("quickpanel-backdrop");
+};
+
+const refreshAudioApps = () => {
+    Utils.execAsync(["bash", "-lc", audioListCommand])
+        .then(out => audioApps.value = out)
+        .catch(err => print(err));
+};
+
+const toggleAudioList = () => {
+    showAudioList.value = !showAudioList.value;
+
+    if (showAudioList.value) {
+        showWifiList.value = false;
+        showBluetoothList.value = false;
+        showPowerModes.value = false;
+        refreshAudioApps();
+    } else {
+        shrinkPanel();
+    }
+};
+
+const togglePowerModes = () => {
+    showPowerModes.value = !showPowerModes.value;
+
+    if (showPowerModes.value) {
+        showWifiList.value = false;
+        showBluetoothList.value = false;
+        showAudioList.value = false;
+    } else {
+        shrinkPanel();
+    }
+};
+
+const setPowerProfile = profile => {
+    run(`powerprofilesctl set ${profile}`);
+
+    Utils.timeout(500, () => {
+        Utils.execAsync(["bash", "-lc", "powerprofilesctl get 2>/dev/null || echo unsupported"])
+            .then(out => powerProfile.value = out.trim())
+            .catch(err => print(err));
+    });
+
 };
 
 const refreshNetworks = () => {
@@ -252,6 +305,261 @@ const SliderRow = (icon, title, variable, command, minValue = 0) => Widget.Box({
                 const v = Math.max(minValue, Math.round(value));
                 run(command(v));
             },
+        }),
+    ],
+});
+
+const AudioAppRow = line => {
+    const [id, name, vol] = line.split("|");
+    const volumeValue = Math.min(100, Math.max(0, Number(vol) || 0));
+
+    return Widget.Box({
+        class_name: "audio-row",
+        vertical: true,
+        spacing: 6,
+        children: [
+            Widget.Box({
+                children: [
+                    Widget.Label({
+                        label: name || `Audio ${id}`,
+                        xalign: 0,
+                        hexpand: true,
+                        truncate: "end",
+                    }),
+                    Widget.Label({
+                        label: `${volumeValue}%`,
+                        xalign: 1,
+                    }),
+                ],
+            }),
+
+            Widget.Slider({
+                class_name: "slider",
+                min: 0,
+                max: 100,
+                value: volumeValue,
+                hexpand: true,
+                onChange: ({ value }) => {
+                    const v = Math.round(value);
+                    run(`pactl set-sink-input-volume ${id} ${v}%`);
+                },
+            }),
+        ],
+    });
+};
+
+const AudioAppList = () => Widget.Box({
+    class_name: "audio-list",
+    vertical: true,
+    spacing: 7,
+    children: audioApps.bind().as(out => {
+        const lines = out.trim().split("\n").filter(Boolean);
+
+        if (lines.length === 0) {
+            return [
+                Widget.Label({
+                    class_name: "audio-empty",
+                    label: "No hay aplicaciones reproduciendo audio",
+                    xalign: 0,
+                }),
+            ];
+        }
+
+        return lines.map(AudioAppRow);
+    }),
+});
+
+const AudioSliderRow = () => Widget.Box({
+    vertical: true,
+    spacing: 8,
+    children: [
+        Widget.Box({
+            class_name: "slider-row",
+            vertical: true,
+            spacing: 7,
+            children: [
+                Widget.Box({
+                    children: [
+Widget.Box({
+    hexpand: true,
+    spacing: 6,
+    children: [
+        Widget.Label({
+            class_name: "slider-title",
+            label: " Volumen",
+            xalign: 0,
+        }),
+        Widget.Button({
+            class_name: "expand-arrow-button",
+            onClicked: toggleAudioList,
+            child: Widget.Label({
+                class_name: "expand-arrow-label",
+                label: showAudioList.bind().as(v => v ? "▴" : "▾"),
+            }),
+        }),
+    ],
+}),
+Widget.Label({
+    class_name: "slider-value",
+    label: volume.bind().as(v => `${Math.round(Number(v) || 0)}%`),
+}),
+
+                    ],
+                }),
+
+                Widget.Slider({
+                    class_name: "slider",
+                    min: 0,
+                    max: 100,
+                    value: volume.bind(),
+                    hexpand: true,
+                    onChange: ({ value }) => {
+                        const v = Math.round(value);
+                        run(`pamixer --set-volume ${v}`);
+                    },
+                }),
+            ],
+        }),
+
+        Widget.Revealer({
+            revealChild: showAudioList.bind(),
+            transition: "slide_down",
+            transitionDuration: 320,
+            child: Widget.Box({
+                class_name: "audio-section",
+                vertical: true,
+                spacing: 8,
+                children: [
+                    Widget.Box({
+                        children: [
+                            Widget.Label({
+                                class_name: "section-title",
+                                label: "Aplicaciones con audio",
+                                xalign: 0,
+                                hexpand: true,
+                            }),
+                            Widget.Button({
+                                class_name: "small-button",
+                                onClicked: refreshAudioApps,
+                                child: Widget.Label({
+                                    label: "Actualizar",
+                                }),
+                            }),
+                        ],
+                    }),
+
+                    AudioAppList(),
+                ],
+            }),
+        }),
+    ],
+});
+
+const PowerModeButton = (label, profile) => Widget.Button({
+    class_name: powerProfile.bind().as(v => {
+        return v === profile ? "mode-button mode-active" : "mode-button";
+    }),
+
+    onClicked: () => setPowerProfile(profile),
+
+    child: Widget.Label({
+        label,
+        xalign: 0.5,
+        hexpand: true,
+    }),
+});
+
+const BrightnessPowerRow = () => Widget.Box({
+    vertical: true,
+    spacing: 8,
+    children: [
+        Widget.Box({
+            class_name: "slider-row",
+            vertical: true,
+            spacing: 7,
+            children: [
+                Widget.Box({
+                    children: [
+ Widget.Box({
+    hexpand: true,
+    children: [
+        Widget.Label({
+            class_name: "slider-title",
+            label: "☀ Brillo",
+            xalign: 0,
+        }),
+        Widget.Button({
+            class_name: "expand-arrow-button",
+            onClicked: togglePowerModes,
+            child: Widget.Label({
+                class_name: "expand-arrow-label",
+                label: showPowerModes.bind().as(v => v ? "▴" : "▾"),
+            }),
+        }),
+    ],
+}),
+Widget.Label({
+    class_name: "slider-value",
+    label: brightness.bind().as(v => `${Math.round(Number(v) || 0)}%`),
+}),
+
+                    ],
+                }),
+
+                Widget.Slider({
+                    class_name: "slider",
+                    min: 10,
+                    max: 100,
+                    value: brightness.bind(),
+                    hexpand: true,
+                    onChange: ({ value }) => {
+                        const v = Math.max(10, Math.round(value));
+                        run(`brightnessctl set ${v}%`);
+                    },
+                }),
+            ],
+        }),
+
+        Widget.Revealer({
+            revealChild: showPowerModes.bind(),
+            transition: "slide_down",
+            transitionDuration: 320,
+            child: Widget.Box({
+                class_name: "mode-section",
+                vertical: true,
+                spacing: 8,
+                children: [
+                    Widget.Box({
+                        children: [
+                            Widget.Label({
+                                class_name: "section-title",
+                                label: "Modo de energía",
+                                xalign: 0,
+                                hexpand: true,
+                            }),
+                        ],
+                    }),
+
+                    Widget.Box({
+                        class_name: "mode-grid",
+                        homogeneous: true,
+                        spacing: 8,
+                        children: [
+                            PowerModeButton("  Ahorro", "power-saver"),
+                            PowerModeButton("  Balanceado", "balanced"),
+                        ],
+                    }),
+
+                    Widget.Box({
+                        class_name: "mode-grid",
+                        homogeneous: true,
+                        spacing: 8,
+                        children: [
+                            PowerModeButton("  Rendimiento", "performance"),
+                        ],
+                    }),
+                ],
+            }),
         }),
     ],
 });
@@ -543,9 +851,9 @@ setup: self => {
                 }),
             }),
 
-            SliderRow("", "Volumen", volume, v => `pamixer --set-volume ${v}`),
+            AudioSliderRow(),
 
-            SliderRow("☀", "Brillo", brightness, v => `brightnessctl set ${v}%`, 10),
+            BrightnessPowerRow(),
 
             Widget.Box({
                 class_name: "info-box",
