@@ -9,8 +9,11 @@ Panel de control personalizado para Linux Mint Cinnamon usando AGS.
 - Control de Bluetooth
 - Lista de dispositivos Bluetooth
 - Slider de volumen
+- Control de aplicaciones reproduciendo audio
 - Slider de brillo con límite mínimo de seguridad
 - Indicador de batería
+- Selector de perfiles de energía
+- Soporte para temas
 - Botones de cerrar sesión, ajustes, suspender, reiniciar y apagar
 - Integración como miniaplicación de Cinnamon
 - Se abre desde el panel superior
@@ -27,6 +30,10 @@ Panel de control personalizado para Linux Mint Cinnamon usando AGS.
 ![Panel](screenshots/captura4.png)
 
 ![Panel](screenshots/captura5.png)
+
+![Panel](screenshots/captura6.png)
+
+![Panel](screenshots/captura7.png)
 
 
 ## Requisitos
