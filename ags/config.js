@@ -52,6 +52,7 @@ const showBluetoothList = Variable(false);
 
 const showAudioList = Variable(false);
 const showPowerModes = Variable(false);
+const showThemeList = Variable(false);
 
 const audioApps = Variable("");
 
@@ -116,6 +117,22 @@ const togglePowerModes = () => {
     }
 };
 
+const toggleThemeList = () => {
+    showThemeList.value = !showThemeList.value;
+
+    if (showThemeList.value) {
+        showWifiList.value = false;
+        showBluetoothList.value = false;
+        showAudioList.value = false;
+        showPowerModes.value = false;
+    } else {
+        shrinkPanel();
+    }
+};
+
+const applyTheme = theme => {
+    run(`ags-theme ${theme}`);
+};
 const setPowerProfile = profile => {
     run(`powerprofilesctl set ${profile}`);
 
@@ -705,6 +722,63 @@ const QuickPanelBackdrop = Widget.Window({
         }),
     }),
 });
+const ThemeButton = (label, theme) => Widget.Button({
+    class_name: "theme-button",
+    onClicked: () => applyTheme(theme),
+    child: Widget.Label({
+        label,
+        xalign: 0.5,
+        hexpand: true,
+    }),
+});
+
+const ThemeSelector = () => Widget.Revealer({
+    revealChild: showThemeList.bind(),
+    transition: "slide_down",
+    transitionDuration: 320,
+    child: Widget.Box({
+        class_name: "theme-section",
+        vertical: true,
+        spacing: 8,
+        children: [
+            Widget.Label({
+                class_name: "section-title",
+                label: "Tema",
+                xalign: 0,
+            }),
+
+            Widget.Box({
+                class_name: "theme-grid",
+                homogeneous: true,
+                spacing: 8,
+                children: [
+                    ThemeButton("● Miku", "miku"),
+                    ThemeButton("● Morado", "purple"),
+                ],
+            }),
+
+            Widget.Box({
+                class_name: "theme-grid",
+                homogeneous: true,
+                spacing: 8,
+                children: [
+                    ThemeButton("● Rosa", "rose"),
+                    ThemeButton("● Verde", "green"),
+                ],
+            }),
+
+             Widget.Box({
+                 class_name: "theme-grid",
+                 homogeneous: true,
+                 spacing: 8,
+                 children: [
+                     ThemeButton("● Gris", "gray"),
+                     ThemeButton("● Rojo", "red"),
+               ],
+           }),
+        ],
+    }),
+});
 
 const QuickPanel = Widget.Window({
     name: "quickpanel",
@@ -757,11 +831,26 @@ setup: self => {
         css: "min-width: 420px; max-width: 420px;",
 
         children: [
-            Widget.Label({
-                class_name: "title",
-                label: "Ajustes rápidos",
-                xalign: 0,
+Widget.Box({
+    children: [
+        Widget.Label({
+            class_name: "title",
+            label: "Ajustes rápidos",
+            xalign: 0,
+            hexpand: true,
+        }),
+        Widget.Button({
+            class_name: "theme-arrow-button",
+            onClicked: toggleThemeList,
+            child: Widget.Label({
+                class_name: "theme-arrow-label",
+                label: showThemeList.bind().as(v => v ? "▴" : "▾"),
             }),
+        }),
+    ],
+}),
+
+ThemeSelector(),
 
             Widget.Box({
                 class_name: "grid",

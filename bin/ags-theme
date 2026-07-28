@@ -1,0 +1,27 @@
+#!/usr/bin/env bash
+
+THEME="$1"
+THEME_DIR="$HOME/.config/ags/themes"
+STYLE="$HOME/.config/ags/style.css"
+STATE="$HOME/.config/ags/current-theme"
+
+if [ -z "$THEME" ]; then
+    echo "Uso: ags-theme miku|purple|rose|green"
+    exit 1
+fi
+
+if [ ! -f "$THEME_DIR/$THEME.css" ]; then
+    echo "Tema no encontrado: $THEME"
+    echo "Temas disponibles:"
+    ls "$THEME_DIR"/*.css 2>/dev/null | xargs -n1 basename | sed 's/.css$//'
+    exit 1
+fi
+
+cp "$THEME_DIR/$THEME.css" "$STYLE"
+echo "$THEME" > "$STATE"
+
+pkill ags 2>/dev/null || true
+rm -f /tmp/ags-quickpanel-open
+ags >/tmp/ags.log 2>&1 &
+
+echo "Tema aplicado: $THEME"

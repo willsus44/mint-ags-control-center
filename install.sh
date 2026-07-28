@@ -33,6 +33,7 @@ sudo apt install -y \
 mkdir -p "$HOME/.config/ags"
 mkdir -p "$HOME/.local/bin"
 mkdir -p "$HOME/.local/share/cinnamon/applets/$APPLET_ID"
+mkdir -p "$HOME/.config/ags/themes"
 
 if [ -f "$HOME/.config/ags/config.js" ]; then
     cp "$HOME/.config/ags/config.js" "$HOME/.config/ags/config.js.backup-$BACKUP_DATE"
@@ -44,10 +45,14 @@ fi
 
 install -m 644 "$BASE_DIR/ags/config.js" "$HOME/.config/ags/config.js"
 install -m 644 "$BASE_DIR/ags/style.css" "$HOME/.config/ags/style.css"
+cp "$BASE_DIR/themes/"*.css "$HOME/.config/ags/themes/"
+sed -i "s|__HOME__|$HOME|g" "$HOME/.config/ags/themes/"*.css
+
 
 install -m 755 "$BASE_DIR/bin/ags-panel-control" "$HOME/.local/bin/ags-panel-control"
 install -m 755 "$BASE_DIR/bin/ags-panel-clickwatch" "$HOME/.local/bin/ags-panel-clickwatch"
 install -m 755 "$BASE_DIR/bin/ags-audio-apps" "$HOME/.local/bin/ags-audio-apps"
+install -m 755 "$BASE_DIR/bin/ags-theme" "$HOME/.local/bin/ags-theme"
 
 cp -r "$BASE_DIR/cinnamon-applet/$APPLET_ID/"* "$HOME/.local/share/cinnamon/applets/$APPLET_ID/"
 
