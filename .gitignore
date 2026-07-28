@@ -1,0 +1,9 @@
+*.bak
+*.bak-*
+*.backup-*
+*.backup-*
+*.final-estable
+*.log
+.DS_Store
+node_modules/
+tmp/

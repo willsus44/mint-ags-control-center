@@ -1,0 +1,27 @@
+#!/usr/bin/env bash
+
+STATE="/tmp/ags-quickpanel-open"
+LOG="/tmp/ags.log"
+WATCHER="$HOME/.local/bin/ags-panel-clickwatch"
+
+# Si AGS no está corriendo, lo inicia
+if ! pgrep -f "/usr/local/bin/ags" >/dev/null; then
+    ags > "$LOG" 2>&1 &
+    sleep 0.7
+fi
+
+# Si el panel ya está abierto, lo cierra
+if [ -f "$STATE" ]; then
+    rm -f "$STATE"
+    pkill -f "ags-panel-clickwatch" 2>/dev/null
+    ags -t quickpanel >/dev/null 2>&1
+    exit 0
+fi
+
+# Si el panel está cerrado, lo abre
+touch "$STATE"
+ags -t quickpanel >/dev/null 2>&1
+
+# Inicia el vigilante de clics fuera del panel
+"$WATCHER" >/tmp/ags-clickwatch.log 2>&1 &
+

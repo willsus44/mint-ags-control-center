@@ -1,0 +1,65 @@
+#!/usr/bin/env bash
+
+STATE="/tmp/ags-quickpanel-open"
+
+# Espera para no capturar el mismo clic que abrió el panel
+sleep 0.35
+
+while [ -f "$STATE" ]; do
+    # Espera hasta que ocurra un clic
+    xinput test-xi2 --root 2>/dev/null | awk '/EVENT type 4 \(ButtonPress\)/ { exit }'
+
+    [ -f "$STATE" ] || exit 0
+
+    sleep 0.05
+
+    # Ubicación del mouse
+    eval "$(xdotool getmouselocation --shell)"
+    MX="$X"
+    MY="$Y"
+
+    # Importante:
+    # Ignora los clics en el panel superior de Cinnamon.
+    # Así el botón del applet puede cerrar el panel sin que se cierre y se vuelva a abrir.
+    if [ "$MY" -lt 42 ]; then
+        continue
+    fi
+
+    # Busca la ventana visible de AGS
+    WIDS="$(xdotool search --onlyvisible --class "com.github.Aylur.ags" 2>/dev/null)"
+
+    # Si no hay ventana visible, limpia estado
+    if [ -z "$WIDS" ]; then
+        rm -f "$STATE"
+        exit 0
+    fi
+
+    INSIDE=0
+
+    for WID in $WIDS; do
+        GEOM="$(xdotool getwindowgeometry --shell "$WID" 2>/dev/null)" || continue
+
+        GX="$(echo "$GEOM" | awk -F= '/^X=/{print $2}')"
+        GY="$(echo "$GEOM" | awk -F= '/^Y=/{print $2}')"
+        GW="$(echo "$GEOM" | awk -F= '/^WIDTH=/{print $2}')"
+        GH="$(echo "$GEOM" | awk -F= '/^HEIGHT=/{print $2}')"
+
+        [ -z "$GX" ] && continue
+
+        RX=$((GX + GW))
+        BY=$((GY + GH))
+
+        if [ "$MX" -ge "$GX" ] && [ "$MX" -le "$RX" ] && [ "$MY" -ge "$GY" ] && [ "$MY" -le "$BY" ]; then
+            INSIDE=1
+            break
+        fi
+    done
+
+    # Si el clic fue fuera del panel AGS, cerrar
+    if [ "$INSIDE" -eq 0 ]; then
+        rm -f "$STATE"
+        ags -t quickpanel >/dev/null 2>&1
+        exit 0
+    fi
+done
+

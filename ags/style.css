@@ -1,0 +1,299 @@
+window.quickpanel-window {
+    background: transparent;
+}
+
+.quickpanel {
+    min-width: 380px;
+    padding: 18px;
+    border-radius: 22px;
+    background: rgba(20, 22, 32, 0.96);
+    border: 2px solid #39c5bb;
+    color: #f5fbff;
+}
+
+.title {
+    font-size: 18px;
+    font-weight: bold;
+    color: #f5fbff;
+    margin-bottom: 4px;
+}
+
+.grid {
+    background: transparent;
+}
+
+.quick-button {
+    min-width: 170px;
+    padding: 13px;
+    border-radius: 15px;
+    background: rgba(54, 56, 70, 0.95);
+    color: #f5fbff;
+    border: none;
+}
+
+.quick-button:hover {
+    background: #39c5bb;
+    color: #061622;
+}
+
+.wifi-section {
+    padding: 12px;
+    border-radius: 16px;
+    background: rgba(12, 14, 22, 0.82);
+}
+
+.section-title {
+    font-weight: bold;
+    color: #f5fbff;
+}
+
+.small-button {
+    padding: 6px 10px;
+    border-radius: 10px;
+    background: rgba(57, 197, 187, 0.22);
+    color: #f5fbff;
+    border: none;
+}
+
+.small-button:hover {
+    background: #39c5bb;
+    color: #061622;
+}
+
+.wifi-list {
+    background: transparent;
+}
+
+.wifi-row {
+    padding: 9px 10px;
+    border-radius: 12px;
+    background: rgba(54, 56, 70, 0.95);
+    color: #f5fbff;
+    border: none;
+}
+
+.wifi-row:hover {
+    background: rgba(57, 197, 187, 0.78);
+    color: #061622;
+}
+
+.wifi-active {
+    background: rgba(57, 197, 187, 0.45);
+}
+
+.wifi-empty {
+    color: #b8bac8;
+    padding: 6px;
+}
+
+.slider-row {
+    padding: 12px;
+    border-radius: 16px;
+    background: rgba(12, 14, 22, 0.82);
+}
+
+.slider-title {
+    color: #f5fbff;
+    font-weight: bold;
+}
+
+.slider-value {
+    color: #39c5bb;
+    font-weight: bold;
+}
+
+.slider {
+    min-height: 24px;
+}
+
+.slider trough {
+    min-height: 8px;
+    border-radius: 99px;
+    background: rgba(80, 84, 102, 0.95);
+}
+
+.slider highlight {
+    border-radius: 99px;
+    background: #39c5bb;
+}
+
+.slider slider {
+    min-width: 18px;
+    min-height: 18px;
+    border-radius: 99px;
+    background: #f5fbff;
+    border: 2px solid #39c5bb;
+}
+
+.info-box {
+    padding: 10px;
+    border-radius: 15px;
+    background: rgba(20, 22, 30, 0.75);
+}
+
+.info-row {
+    padding: 4px 2px;
+}
+
+.info-title {
+    color: #b8bac8;
+}
+
+.info-value {
+    color: #f5fbff;
+    font-weight: bold;
+}
+
+.bottom-row {
+    background: transparent;
+}
+
+.bottom-row .quick-button {
+    min-width: 110px;
+    padding: 13px 8px;
+}
+
+
+.bt-section {
+    padding: 12px;
+    border-radius: 16px;
+    background: rgba(12, 14, 22, 0.82);
+}
+
+.bt-list {
+    background: transparent;
+}
+
+.bt-row {
+    padding: 9px 10px;
+    border-radius: 12px;
+    background: rgba(54, 56, 70, 0.95);
+    color: #f5fbff;
+    border: none;
+}
+
+.bt-row:hover {
+    background: rgba(57, 197, 187, 0.78);
+    color: #061622;
+}
+
+.bt-active {
+    background: rgba(57, 197, 187, 0.45);
+}
+
+.bt-empty {
+    color: #b8bac8;
+    padding: 6px;
+}
+.quick-button-active {
+    background: #39c5bb;
+    color: #061622;
+}
+
+.quick-button-active:hover {
+    background: #4ee6db;
+    color: #061622;
+}
+.quick-button-on {
+    background: #39c5bb;
+    color: #061622;
+}
+
+.quick-button-on:hover {
+    background: #4ee6db;
+    color: #061622;
+}
+.power-grid {
+    background: transparent;
+}
+
+.power-grid .quick-button {
+    min-width: 175px;
+    padding: 13px 10px;
+}
+
+.power-grid > box:last-child .quick-button {
+    min-width: 360px;
+}
+
+.power-grid {
+    background: transparent;
+}
+
+.power-row {
+    background: transparent;
+}
+
+.power-row .power-button {
+    min-width: 0;
+    padding: 13px 10px;
+}
+
+.power-row-full .power-button {
+    min-width: 0;
+}
+window,
+window.quickpanel-window,
+.quickpanel-window {
+    background: transparent;
+    background-color: transparent;
+}
+
+.quickpanel {
+    background: rgba(12, 14, 22, 0.62);
+    border: 2px solid rgba(57, 197, 187, 0.95);
+    border-radius: 24px;
+}
+
+.slider-row,
+.info-box,
+.wifi-section,
+.bt-section {
+    background: rgba(8, 10, 18, 0.46);
+}
+
+.quick-button,
+.wifi-row,
+.bt-row {
+    background: rgba(54, 56, 70, 0.62);
+}
+
+.quick-button:hover,
+.wifi-row:hover,
+.bt-row:hover {
+    background: rgba(57, 197, 187, 0.82);
+    color: #061622;
+}
+
+.quick-button-on {
+    background: rgba(57, 197, 187, 0.88);
+    color: #061622;
+}
+
+* {
+    font-family: "Noto Sans", "Font Awesome 6 Free", "FontAwesome", "Symbols Nerd Font";
+}
+window.quickpanel-backdrop,
+.quickpanel-backdrop {
+    background: transparent;
+    background-color: transparent;
+}
+
+.quickpanel {
+    min-width: 420px;
+}
+
+.wifi-row label,
+.bt-row label {
+    font-size: 13px;
+}
+
+.wifi-section,
+.bt-section {
+    min-width: 0;
+}
+
+.wifi-row,
+.bt-row {
+    min-width: 0;
+}
