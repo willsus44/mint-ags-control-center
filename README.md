@@ -16,12 +16,10 @@ Panel de control personalizado para Linux Mint Cinnamon usando AGS.
 - Se abre desde el panel superior
 - Se cierra al hacer clic fuera del recuadro
 
-## Captura
-
-Puedes colocar una captura dentro de la carpeta `screenshots/` y enlazarla aquí:
+## Capturas
 
 ```markdown
-![Panel](screenshots/panel.png)
+![Panel](screenshots/Captura de panel.png)
 ```
 
 ## Requisitos
