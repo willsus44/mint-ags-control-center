@@ -1,4 +1,4 @@
-kk# Mint AGS Control Center
+# Mint AGS Control Center
 
 Panel de control personalizado para Linux Mint Cinnamon usando AGS.
 
