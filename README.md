@@ -18,9 +18,10 @@ Panel de control personalizado para Linux Mint Cinnamon usando AGS.
 
 ## Capturas
 
-```markdown
-![Panel](screenshots/Captura de panel.png)
-```
+![Panel](screenshots/captura1.png)
+
+![Panel](screenshots/captura2.png)
+
 
 ## Requisitos
 
